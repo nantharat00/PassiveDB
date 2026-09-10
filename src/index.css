@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Mitr', 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
+}
+
+::selection {
+  background-color: #d1fae5;
+  color: #065f46;
+}

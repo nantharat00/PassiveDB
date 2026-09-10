@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "entities": {
+    "passivedb": {
+      "title": "passivedb",
+      "description": "Income and expense transactions stored in PassiveDB",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the owner" },
+        "userEmail": { "type": "string", "description": "Gmail / email of the owner" },
+        "type": { "type": "string", "enum": ["income", "expense"], "description": "Type of transaction" },
+        "amount": { "type": "number", "description": "Transaction amount in THB" },
+        "category": { "type": "string", "description": "Category of expense or income" },
+        "date": { "type": "string", "description": "ISO date YYYY-MM-DD" },
+        "note": { "type": "string", "description": "Optional memo or description" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of creation" }
+      },
+      "required": ["userId", "type", "amount", "category", "date"]
+    },
+    "budgets": {
+      "title": "budgets",
+      "description": "Monthly budget targets by category or month",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "month": { "type": "string", "description": "YYYY-MM" },
+        "budgetAmount": { "type": "number" }
+      },
+      "required": ["userId", "month", "budgetAmount"]
+    }
+  },
+  "firestore": {
+    "/passivedb/{transactionId}": {
+      "entity": "passivedb",
+      "description": "Income and expense financial records in PassiveDB",
+      "rules": {
+        "read": "request.auth != null && request.auth.uid == resource.data.userId",
+        "create": "request.auth != null && request.auth.uid == request.resource.data.userId",
+        "update": "request.auth != null && request.auth.uid == resource.data.userId && request.auth.uid == request.resource.data.userId",
+        "delete": "request.auth != null && request.auth.uid == resource.data.userId"
+      }
+    },
+    "/budgets/{budgetId}": {
+      "entity": "budgets",
+      "description": "Monthly budget goals per user",
+      "rules": {
+        "read": "request.auth != null && request.auth.uid == resource.data.userId",
+        "create": "request.auth != null && request.auth.uid == request.resource.data.userId",
+        "update": "request.auth != null && request.auth.uid == resource.data.userId && request.auth.uid == request.resource.data.userId",
+        "delete": "request.auth != null && request.auth.uid == resource.data.userId"
+      }
+    }
+  }
+}
